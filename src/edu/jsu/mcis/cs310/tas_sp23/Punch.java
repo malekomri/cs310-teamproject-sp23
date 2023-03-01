@@ -61,14 +61,14 @@ public class Punch {
         return adjustedtimestamp;
     }
     
-    //toString() Methods (incomplete)
+    //toString() Methods (probably incorrect)
     public String printOriginal() {
         
         StringBuilder s = new StringBuilder();
 
         s.append('#').append(id).append(' ');
-        //event type (clock out or clock in)
-        //(day) date time
+        s.append(punchtype).append(": ");
+        s.append(adjustedtimestamp);
 
         return s.toString();
     }
