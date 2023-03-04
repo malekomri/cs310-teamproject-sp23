@@ -1,12 +1,13 @@
 package edu.jsu.mcis.cs310.tas_sp23.dao;
 
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
+import edu.jsu.mcis.cs310.tas_sp23.Badge;
+import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import java.sql.*;
 
-//Used BadgeDAO as base, still not complete
 public class PunchDAO {
 
-    private static final String QUERY_FIND = "SELECT * FROM punch WHERE id = ?";
+    private static final String QUERY_FIND = "SELECT * FROM event WHERE id = ?";
 
     private final DAOFactory daoFactory;
 
@@ -16,7 +17,7 @@ public class PunchDAO {
 
     }
 
-    public Punch find(String id) {
+    public Punch find(Integer id) {
 
         Punch punch = null;
 
@@ -30,7 +31,7 @@ public class PunchDAO {
             if (conn.isValid(0)) {
 
                 ps = conn.prepareStatement(QUERY_FIND);
-                ps.setString(1, id);
+                ps.setInt(1, id);
 
                 boolean hasresults = ps.execute();
 
@@ -39,9 +40,17 @@ public class PunchDAO {
                     rs = ps.getResultSet();
 
                     while (rs.next()) {
-
-                        String description = rs.getString("description");
-                        //punch = new Punch(id, description);
+                        
+                        Integer terminalid = rs.getInt("terminalid");
+                        String badgeid = rs.getString("badgeid");
+                        Integer punchtypeid = rs.getInt("eventtypeid");
+                        
+                        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+                        Badge badge = badgeDAO.find(badgeid);
+                        
+                        EventType punchtype = EventType.values()[punchtypeid];
+                        
+                        punch = new Punch(terminalid, badge, punchtype);
 
                     }
 
@@ -75,5 +84,66 @@ public class PunchDAO {
         return punch;
 
     }
+    /*
+    public Punch list(Badge badge, LocalDateTime originaltimestamp) {
 
+        Punch punch = null;
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+
+            Connection conn = daoFactory.getConnection();
+
+            if (conn.isValid(0)) {
+
+                ps = conn.prepareStatement(QUERY_FIND);
+                ps.setString(1, id);
+
+                boolean hasresults = ps.execute();
+
+                if (hasresults) {
+
+                    rs = ps.getResultSet();
+
+                    while (rs.next()) {
+                        
+                        //Integer
+                        String description = rs.getString("description");
+                        punch = new Punch(//something goes here);
+
+                    }
+
+                }
+
+            }
+
+        } catch (SQLException e) {
+
+            throw new DAOException(e.getMessage());
+
+        } finally {
+
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+
+        }
+
+        return punch;
+
+    }
+    */
 }
