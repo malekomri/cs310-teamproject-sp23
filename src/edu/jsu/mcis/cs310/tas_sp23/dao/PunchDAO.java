@@ -5,6 +5,7 @@ import edu.jsu.mcis.cs310.tas_sp23.Badge;
 import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 //import java.time.LocalDate;
 //import java.time.format.DateTimeFormatter;
 //import java.util.ArrayList;
@@ -48,13 +49,17 @@ public class PunchDAO {
                         Integer terminalid = rs.getInt("terminalid");
                         String badgeid = rs.getString("badgeid");
                         Integer punchtypeid = rs.getInt("eventtypeid");
+                        String timeString = rs.getString("timestamp");
                         
                         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
                         Badge badge = badgeDAO.find(badgeid);
                         
                         EventType punchtype = EventType.values()[punchtypeid];
                         
-                        punch = new Punch(terminalid, badge, punchtype);
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                        LocalDateTime originaltimestamp = LocalDateTime.parse(timeString, formatter);
+                        
+                        punch = new Punch(id, terminalid, badge, originaltimestamp, punchtype);
 
                     }
 

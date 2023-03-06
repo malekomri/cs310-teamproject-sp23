@@ -1,6 +1,7 @@
 package edu.jsu.mcis.cs310.tas_sp23;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Punch {
     
@@ -12,6 +13,8 @@ public class Punch {
     private final LocalDateTime originaltimestamp;
     private final LocalDateTime adjustedtimestamp;
     
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
+    
     public PunchAdjustmentType adjustmenttype;
     
     
@@ -22,7 +25,7 @@ public class Punch {
         this.badge = badge;
         this.punchtype = punchtype;
         this.id = null;
-        originaltimestamp = LocalDateTime.now();
+        originaltimestamp = null;
         adjustedtimestamp = null;
         
     }
@@ -69,9 +72,9 @@ public class Punch {
         
         StringBuilder s = new StringBuilder();
 
-        s.append('#').append(id).append(' ');
+        s.append('#').append(badge.getId()).append(' ');
         s.append(punchtype).append(": ");
-        s.append(originaltimestamp);
+        s.append(originaltimestamp.format(formatter));
 
         return s.toString();
     }
