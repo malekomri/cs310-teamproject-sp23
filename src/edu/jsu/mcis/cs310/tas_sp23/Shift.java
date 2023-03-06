@@ -80,7 +80,3 @@ public class Shift {
  return s.toString();
  }
 }
-
-
-
-
