@@ -42,7 +42,7 @@ public class Punch {
         
     }
     
-    
+    //Getter Methods
     public Integer getTerminalid() {
         return terminalid;
     }
@@ -67,14 +67,14 @@ public class Punch {
         return adjustedtimestamp;
     }
     
-
+    //toString Methods
     public String printOriginal() {
         
         StringBuilder s = new StringBuilder();
 
         s.append('#').append(badge.getId()).append(' ');
         s.append(punchtype).append(": ");
-        s.append(originaltimestamp.format(formatter));
+        s.append(originaltimestamp.format(formatter).toUpperCase());
 
         return s.toString();
     }

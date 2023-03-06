@@ -6,9 +6,6 @@ import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-//import java.time.LocalDate;
-//import java.time.format.DateTimeFormatter;
-//import java.util.ArrayList;
 
 public class PunchDAO {
 
@@ -46,16 +43,20 @@ public class PunchDAO {
 
                     while (rs.next()) {
                         
+                        //Getting info from database
                         Integer terminalid = rs.getInt("terminalid");
                         String badgeid = rs.getString("badgeid");
                         Integer punchtypeid = rs.getInt("eventtypeid");
                         String timeString = rs.getString("timestamp");
                         
+                        //badgeid to badge object
                         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
                         Badge badge = badgeDAO.find(badgeid);
                         
+                        //eventtypeid to punchtype
                         EventType punchtype = EventType.values()[punchtypeid];
                         
+                        //DateTime formatting
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                         LocalDateTime originaltimestamp = LocalDateTime.parse(timeString, formatter);
                         
@@ -93,79 +94,4 @@ public class PunchDAO {
         return punch;
 
     }
-    
-    
-    public Punch list(Badge badge, LocalDateTime originaltimestamp) {
-
-    Punch punch = null;
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-
-            Connection conn = daoFactory.getConnection();
-
-            if (conn.isValid(0)) {
-
-                ps = conn.prepareStatement(QUERY_FIND);
-                String id = null;
-                ps.setString(1, id);
-                //ps.setString(2, date.toString());
-
-                boolean hasresults = ps.execute();
-
-                if (hasresults) {
-
-                    rs = ps.getResultSet();
-
-                    while (rs.next()) {
-                        
-                        /*
-                        int terminalid = rs.getInt("terminalid");
-                        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
-                        Badge punchBadge = badgeDAO.find(rs.getString("badgeid"));
-                        LocalDateTime timestamp = rs.getTimestamp("timestamp").toLocalDateTime();
-                        int eventTypeId = rs.getInt("eventtypeid");
-                        EventType punchtypeid = EventType.values()[eventTypeId];
-
-                        *///punches.add(new Punch(terminalid, Badge badge, timestamp, punchtypeid))
-                        
-                        //Integer
-                        //String description = rs.getString("description");
-                        //punch = new Punch(//something goes here);
-
-                    }
-
-                }
-
-            }
-
-        } catch (SQLException e) {
-
-            throw new DAOException(e.getMessage());
-
-        } finally {
-
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    throw new DAOException(e.getMessage());
-                }
-            }
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    throw new DAOException(e.getMessage());
-                }
-            }
-
-        }
-
-        return punch;
-
-    }
-    
 }
