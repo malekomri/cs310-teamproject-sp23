@@ -4,6 +4,10 @@ import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import edu.jsu.mcis.cs310.tas_sp23.Badge;
 import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import java.sql.*;
+import java.time.LocalDateTime;
+//import java.time.LocalDate;
+//import java.time.format.DateTimeFormatter;
+//import java.util.ArrayList;
 
 public class PunchDAO {
 
@@ -84,10 +88,11 @@ public class PunchDAO {
         return punch;
 
     }
-    /*
+    
+    
     public Punch list(Badge badge, LocalDateTime originaltimestamp) {
 
-        Punch punch = null;
+    Punch punch = null;
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -99,7 +104,9 @@ public class PunchDAO {
             if (conn.isValid(0)) {
 
                 ps = conn.prepareStatement(QUERY_FIND);
+                String id = null;
                 ps.setString(1, id);
+                //ps.setString(2, date.toString());
 
                 boolean hasresults = ps.execute();
 
@@ -109,9 +116,19 @@ public class PunchDAO {
 
                     while (rs.next()) {
                         
+                        /*
+                        int terminalid = rs.getInt("terminalid");
+                        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+                        Badge punchBadge = badgeDAO.find(rs.getString("badgeid"));
+                        LocalDateTime timestamp = rs.getTimestamp("timestamp").toLocalDateTime();
+                        int eventTypeId = rs.getInt("eventtypeid");
+                        EventType punchtypeid = EventType.values()[eventTypeId];
+
+                        *///punches.add(new Punch(terminalid, Badge badge, timestamp, punchtypeid))
+                        
                         //Integer
-                        String description = rs.getString("description");
-                        punch = new Punch(//something goes here);
+                        //String description = rs.getString("description");
+                        //punch = new Punch(//something goes here);
 
                     }
 
@@ -145,5 +162,5 @@ public class PunchDAO {
         return punch;
 
     }
-    */
+    
 }
