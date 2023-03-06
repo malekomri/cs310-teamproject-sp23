@@ -36,4 +36,8 @@ public final class DAOFactory {
         return new BadgeDAO(this);
     }
 
+       public ShiftDAO getShiftDAO() {
+        return new ShiftDAO(this);
+    }
+
 }
