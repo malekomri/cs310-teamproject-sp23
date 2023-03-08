@@ -1,4 +1,5 @@
 package edu.jsu.mcis.cs310.tas_sp23;
+
 import java.text.ParseException;
 import java.time.Duration;
 import java.time.LocalTime;
@@ -11,6 +12,7 @@ public class Shift {
  private final String description, shiftStart, shiftStop, roundInterval;
  private final String gracePeriod, dockPenalty, lunchStart, lunchStop, lunchThreshold;
  private long shiftDuration, lunchDuration;
+ 
  public Shift(int id, String description, String shiftStart, String shiftStop, String roundInterval, String gracePeriod, String dockPenalty, String lunchStart, String lunchStop, String lunchThreshold ){
  this.id = id;
  this.description = description;
