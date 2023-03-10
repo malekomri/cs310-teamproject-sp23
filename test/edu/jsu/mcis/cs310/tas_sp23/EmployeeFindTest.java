@@ -3,8 +3,14 @@ package edu.jsu.mcis.cs310.tas_sp23;
 import edu.jsu.mcis.cs310.tas_sp23.dao.BadgeDAO;
 import edu.jsu.mcis.cs310.tas_sp23.dao.DAOFactory;
 import edu.jsu.mcis.cs310.tas_sp23.dao.EmployeeDAO;
+import edu.jsu.mcis.cs310.tas_sp23.Employee;
+
+
+
 import org.junit.*;
 import static org.junit.Assert.*;
+
+import java.sql.SQLException;
 
 public class EmployeeFindTest {
 
@@ -18,14 +24,15 @@ public class EmployeeFindTest {
     }
 
     @Test
-    public void testFindEmployee1() {
+    public void testFindEmployee1() throws SQLException {
         
+       
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
 
         /* Retrieve Employee from Database (by ID) */
 
         Employee e1 = employeeDAO.find(14);
-
+        
         /* Compare to Expected Values */
         
         assertEquals("ID #14: Donaldson, Kathleen C (#229324A4), Type: Full-Time, Department: Press, Active: 02/02/2017", e1.toString());
@@ -50,7 +57,7 @@ public class EmployeeFindTest {
     }
     
     @Test
-    public void testFindEmployee3() {
+    public void testFindEmployee3() throws SQLException {
         
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
 

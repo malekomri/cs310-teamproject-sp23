@@ -3,7 +3,6 @@ package edu.jsu.mcis.cs310.tas_sp23.dao;
 import edu.jsu.mcis.cs310.tas_sp23.Employee;
 import edu.jsu.mcis.cs310.tas_sp23.Badge;
 import edu.jsu.mcis.cs310.tas_sp23.Department;
-import edu.jsu.mcis.cs310.tas_sp23.Department;
 import edu.jsu.mcis.cs310.tas_sp23.EmployeeType;
 import edu.jsu.mcis.cs310.tas_sp23.Shift;
 
