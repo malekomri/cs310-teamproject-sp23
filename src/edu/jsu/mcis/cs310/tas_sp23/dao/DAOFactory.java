@@ -40,8 +40,13 @@ public final class DAOFactory {
         return new PunchDAO(this);
     }
 
-       public ShiftDAO getShiftDAO() {
+    public ShiftDAO getShiftDAO() {
         return new ShiftDAO(this);
     }
 
-}
+    public EmployeeDAO getEmployeeDAO() {
+        return new EmployeeDAO(this);
+     }
+  }
+
+

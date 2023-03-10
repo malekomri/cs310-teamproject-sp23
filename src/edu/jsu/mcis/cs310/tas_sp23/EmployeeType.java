@@ -2,7 +2,7 @@ package edu.jsu.mcis.cs310.tas_sp23;
 
 public enum EmployeeType {
 
-    PART_TIME("Temporary / Part-Time"),
+    PART_TIME("Part-Time"),
     FULL_TIME("Full-Time");
     private final String description;
 
