@@ -2,6 +2,9 @@ package edu.jsu.mcis.cs310.tas_sp23;
 
 import java.time.LocalDateTime;
 
+import edu.jsu.mcis.cs310.tas_sp23.dao.DAOFactory;
+import edu.jsu.mcis.cs310.tas_sp23.dao.DepartmentDAO;
+
 public class Employee {
     private int id;
     private String firstName;
@@ -50,8 +53,11 @@ public class Employee {
     }
 
     public Department getDepartment() {
-        return department;
+        DepartmentDAO departmentDAO = DAOFactory.getDepartmentDAO();
+        return departmentDAO.getDepartmentById(this.departmentID);
     }
+    
+    
 
     public Shift getShift() {
         return shift;

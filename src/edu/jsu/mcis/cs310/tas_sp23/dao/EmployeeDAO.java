@@ -2,6 +2,8 @@ package edu.jsu.mcis.cs310.tas_sp23.dao;
 
 import edu.jsu.mcis.cs310.tas_sp23.Employee;
 import edu.jsu.mcis.cs310.tas_sp23.Badge;
+import edu.jsu.mcis.cs310.tas_sp23.Department;
+import edu.jsu.mcis.cs310.tas_sp23.Department;
 import edu.jsu.mcis.cs310.tas_sp23.EmployeeType;
 import edu.jsu.mcis.cs310.tas_sp23.Shift;
 
@@ -18,7 +20,7 @@ public class EmployeeDAO {
         this.daoFactory = daoFactory;
     }
 
-    public Employee find(int id) {
+    public Employee find(int id) throws SQLException {
         Employee employee = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -43,30 +45,31 @@ public class EmployeeDAO {
                         DepartmentDAO departmentDAO = daoFactory.getDepartmentDAO();
                         Department department = departmentDAO.find(departmentId);
                         EmployeeType type = EmployeeType.values()[typeId - 1];
-                        employee = new Employee(id, firstName, middleName, lastName, active, badge, department, type);
+                        employee = new Employee(id, firstName, middleName, lastName, active, badge, department, null, type);
                     }
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new SQLException("Unable to find employee with ID " + id, e);
         } finally {
             if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
-                    throw new DAOException(e.getMessage());
+                    throw new SQLException(e.getMessage(), e);
                 }
             }
             if (ps != null) {
                 try {
                     ps.close();
                 } catch (SQLException e) {
-                    throw new DAOException(e.getMessage());
+                    throw new SQLException(e.getMessage(), e);
                 }
             }
         }
         return employee;
     }
+    
     
     public Employee find(Badge badge) {
 
@@ -111,4 +114,5 @@ public class EmployeeDAO {
         
         return employee;
     }
+}
     
