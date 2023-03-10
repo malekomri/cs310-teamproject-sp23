@@ -36,4 +36,5 @@ public final class DAOFactory {
         return new BadgeDAO(this);
     }
 
+    public DepartmentDAO getDepartmentDAO() { return new DepartmentDAO(this); }
 }
