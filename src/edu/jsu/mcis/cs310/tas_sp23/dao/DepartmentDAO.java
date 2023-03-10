@@ -31,7 +31,7 @@ public class DepartmentDAO {
             if (conn.isValid(0)) {
 
                 ps = conn.prepareStatement(QUERY_FIND);
-                ps.setString(1, String.valueOf(1));
+                ps.setString(1, String.valueOf(id));
 
                 boolean hasresult = ps.execute();
 
