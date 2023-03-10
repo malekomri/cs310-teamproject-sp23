@@ -50,3 +50,8 @@ public final class DAOFactory {
   }
 
 
+<<<<<<< HEAD
+=======
+    public DepartmentDAO getDepartmentDAO() { return new DepartmentDAO(this); }
+}
+>>>>>>> f2
