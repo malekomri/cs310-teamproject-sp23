@@ -2,6 +2,8 @@ package edu.jsu.mcis.cs310.tas_sp23.dao;
 
 import java.sql.*;
 
+import edu.jsu.mcis.cs310.tas_sp23.Department;
+
 public final class DAOFactory {
 
     private static final String PROPERTY_URL = "url";
@@ -46,11 +48,15 @@ public final class DAOFactory {
 
     public EmployeeDAO getEmployeeDAO() {
         return new EmployeeDAO(this);
-     }
+    }
 
-     public  DepartmentDAO getDepartmentDAO() {
+    public DepartmentDAO getDepartmentDAO() {
         return new DepartmentDAO(this);
-     }
-  }
+    }
 
-
+    public Department getDepartment(int departmentID) {
+        DepartmentDAO departmentDAO = getDepartmentDAO();
+        return departmentDAO.find(departmentID);
+    }
+    
+}

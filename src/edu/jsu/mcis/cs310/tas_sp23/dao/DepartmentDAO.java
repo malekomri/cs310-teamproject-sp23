@@ -11,54 +11,45 @@ public class DepartmentDAO {
     private final DAOFactory daoFactory;
 
     public DepartmentDAO(DAOFactory daoFactory) {
-
         this.daoFactory = daoFactory;
-
     }
 
     private static final String QUERY_FIND = "SELECT * FROM department WHERE id = ?";
 
     public Department find(int id) {
-        Department deparment = null;
+        Department department = null;
 
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        try {
+        try (Connection conn = daoFactory.getConnection()) {
 
-            Connection conn = daoFactory.getConnection();
+            ps = conn.prepareStatement(QUERY_FIND);
+            ps.setInt(1, id);
 
-            if (conn.isValid(0)) {
+            boolean hasresult = ps.execute();
 
-                ps = conn.prepareStatement(QUERY_FIND);
-                ps.setString(1, String.valueOf(1));
+            if (hasresult) {
 
-                boolean hasresult = ps.execute();
+                rs = ps.getResultSet();
 
-                if (hasresult) {
+                while (rs.next()) {
 
-                    rs = ps.getResultSet();
+                    int departmentid = rs.getInt("id");
+                    int terminalid = rs.getInt("terminalid");
+                    String description = rs.getString("description");
 
-                    while (rs.next()) {
-
-                        int terminalid = rs.getInt("terminalid");
-                        int departmentind = rs.getInt("id");
-                        String description = rs.getString("description");
-
-                        deparment = new Department(departmentind, terminalid, description);
-                    }
+                    department = new Department(departmentid, terminalid, description);
                 }
             }
         } catch (SQLException e) {
-
             throw new RuntimeException(e);
-
         } finally {
             if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
-                    throw  new DAOException(e.getMessage());
+                    throw new DAOException(e.getMessage());
                 }
             }
             if (ps != null) {
@@ -70,7 +61,6 @@ public class DepartmentDAO {
             }
         }
 
-        return deparment;
-
+        return department;
     }
 }

@@ -53,9 +53,12 @@ public class Employee {
     }
 
     public Department getDepartment() {
-       
-        return department; 
+        DAOFactory daoFactory = new DAOFactory("tas");
+        DepartmentDAO departmentDAO = daoFactory.getDepartmentDAO();
+        return departmentDAO.find(this.department.getDepartmentid());
     }
+    
+    
     
     
 

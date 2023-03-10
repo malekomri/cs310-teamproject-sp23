@@ -1,5 +1,7 @@
 package edu.jsu.mcis.cs310.tas_sp23;
 
+
+
 public class Department {
     private int departmentid, terminalid;
     private String description;
@@ -36,8 +38,6 @@ public class Department {
     
     @Override
     public String toString() {
-        return "#" + departmentid + " (" + description + "), Terminal ID: " + terminalid;
+        return String.format("#%d (%s), Terminal ID: %d", departmentid, description, terminalid);
     }
 }
-
-
