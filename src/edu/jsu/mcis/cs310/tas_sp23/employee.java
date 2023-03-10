@@ -53,8 +53,8 @@ public class Employee {
     }
 
     public Department getDepartment() {
-        DepartmentDAO departmentDAO = DAOFactory.getDepartmentDAO();
-        return departmentDAO.getDepartmentById(this.departmentID);
+       
+        return department; 
     }
     
     
