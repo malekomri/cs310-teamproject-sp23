@@ -1,6 +1,7 @@
 package edu.jsu.mcis.cs310.tas_sp23;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import edu.jsu.mcis.cs310.tas_sp23.dao.DAOFactory;
 import edu.jsu.mcis.cs310.tas_sp23.dao.DepartmentDAO;
@@ -70,12 +71,14 @@ public class Employee {
         return type;
     }
 
+   
+   
+    
+   
     @Override
     public String toString() {
-        String name = String.format("%s%s%s", firstName, middleName != null ? " " + middleName + " " : " ", lastName);
-        String badgeDescription = badge.getDescription() != null ? badge.getDescription() : "";
-        String badgeId = badge.getId() != null ? badge.getId() : "";
-        String departmentDescription = department.getDescription() != null ? department.getDescription() : "";
-        return String.format("#%d %s (%s, %s) [%s] (%s) %s", id, name, badgeDescription, badgeId, type.toString(), departmentDescription, active.toString());
-    }
-}
+        String activeDate = active.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+        String middle = (middleName != null && !middleName.isEmpty()) ? " " + middleName + " " : " ";
+        return "ID #" + id + ": " + lastName + ", " + firstName + middle + "(#" + badge.getId() + "), Type: " + getType() + ", Department: " + department.getDescription() + ", Active: " + activeDate;
+    }}
+    
