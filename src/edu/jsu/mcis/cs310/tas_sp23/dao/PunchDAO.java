@@ -6,12 +6,16 @@ import edu.jsu.mcis.cs310.tas_sp23.Department;
 import edu.jsu.mcis.cs310.tas_sp23.Employee;
 import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class PunchDAO {
 
-    private static final String QUERY_FIND = "SELECT * FROM event WHERE id = ?";
+    private static final String QUERY_FIND_ID = "SELECT * FROM event WHERE id = ?";
+    private static final String QUERY_FIND_BADGEID = "SELECT * FROM event WHERE badgeid = ?";
+    //private static final String QUERY_LIST_NEXT_DAY = "SELECT *, DATE('timestamp') AS tsdate FROM event WHERE badgeid = ? ORDER BY 'timestamp' LIMIT 1;";
 
     private final DAOFactory daoFactory;
 
@@ -34,7 +38,7 @@ public class PunchDAO {
 
             if (conn.isValid(0)) {
 
-                ps = conn.prepareStatement(QUERY_FIND);
+                ps = conn.prepareStatement(QUERY_FIND_ID);
                 ps.setInt(1, id);
 
                 boolean hasresults = ps.execute();
@@ -94,8 +98,12 @@ public class PunchDAO {
         }
 
         return punch;
-
     }
+
+
+
+    
+
 
     public int create(Punch punch) {
 
@@ -113,7 +121,7 @@ public class PunchDAO {
     
             // Check if the punch is authorized
             int terminalID = punch.getTerminalid();
-            Badge badgeID = punch.badge();
+            Badge badgeID = punch.getBadge();
             EventType eventType = punch.getPunchtype();
             LocalDateTime originalTimeStamp = punch.getOriginaltimestamp();
             BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
@@ -167,15 +175,5 @@ public class PunchDAO {
             }
             if (psInsert != null) {
                 try {
-                    psInsert.close();
-                } catch (SQLException e) {
-                    throw new DAOException(e.getMessage());
-                }
-            }
-        }
-    
-        return punchID;
-    
-    }
-    
-}
+                    psInsert.close();}
+}}}

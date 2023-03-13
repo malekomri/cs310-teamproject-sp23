@@ -47,9 +47,6 @@ public class Punch {
         return terminalid;
     }
     
-    public Badge badge() {
-        return badge;
-    }
 
     public Badge getBadge() {
         return badge;
