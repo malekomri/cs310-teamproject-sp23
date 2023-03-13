@@ -56,7 +56,7 @@ public class PunchCreateTest {
 
         rts = p2.getOriginaltimestamp();
 
-        assertEquals(terminalid, p2.getTerminalid());
+        assertEquals((Object)terminalid, (Object)p2.getTerminalid());
         assertEquals(punchtype, p2.getPunchtype());
         assertEquals(ots.format(dtf), rts.format(dtf));
 
