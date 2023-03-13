@@ -109,7 +109,7 @@ public class PunchDAO {
 
         ArrayList<Punch> list = new ArrayList<>();
         
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -122,31 +122,29 @@ public class PunchDAO {
 
                 ps = conn.prepareStatement(QUERY_FIND_BADGEID);
                 ps.setString(1, badge.getId());
-                ps.setDate(2, java.sql.Date.valueOf(timestamp));
+                //ps.setDate(2, java.sql.Date.valueOf(timestamp));
 
                 boolean hasresults = ps.execute();
 
                 if (hasresults) {
 
                     rs = ps.getResultSet();
-                    PunchDAO punchDAO = new PunchDAO(daoFactory);
 
                     while (rs.next()) {
                         
                         Integer id = rs.getInt("id");
-                        
-                        Punch punch = punchDAO.find(id);
-                        list.add(punch);
                         String timeString = rs.getString("timestamp");
-                        LocalDate date = LocalDate.parse(timeString, formatter);
                         
-                        if(timestamp.equals(date)) {
-                            
+                        LocalDateTime dateTime = LocalDateTime.parse(timeString, formatter);
+                        LocalDate date = dateTime.toLocalDate();
+                        
+                        if (timestamp.equals(date)) {
                             list.add(find(id));
-                            
                         }
                         
                     }
+                    
+                    /*
                     
                     //If last pucnh is CLOCK_IN, next day must be checked for closing pair
                     int lastIndex = list.size();
@@ -160,9 +158,9 @@ public class PunchDAO {
                         ps.setString(1,badge.getId());
                         ps.setDate(2, java.sql.Date.valueOf(timestamp));
                         
-                        boolean hasresults2 = ps.execute();
+                        hasresults = ps.execute();
                         
-                        if(hasresults2){
+                        if(hasresults){
                             
                             rs = ps.getResultSet();
                             
@@ -180,9 +178,8 @@ public class PunchDAO {
                                 }
                             }
                         }
-                        
                     }
-
+                    */
                 }
 
             }
