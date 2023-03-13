@@ -13,6 +13,7 @@ public class PunchDAO {
 
     private static final String QUERY_FIND_ID = "SELECT * FROM event WHERE id = ?";
     private static final String QUERY_FIND_BADGEID = "SELECT * FROM event WHERE badgeid = ?";
+    //private static final String QUERY_LIST_NEXT_DAY = "SELECT *, DATE('timestamp') AS tsdate FROM event WHERE badgeid = ? ORDER BY 'timestamp' LIMIT 1;";
 
     private final DAOFactory daoFactory;
 
@@ -99,7 +100,9 @@ public class PunchDAO {
     }
     
     /*
-        The find method takes an id and creates a punch object using the information from the database. Right now, my plan is to use the badgeid to search for the corresponding ids in the database, test if the id matches with the given timestamp, and then feed that into the find method and the add it to the list.
+        The find method takes an id and creates a punch object using the information from the database. 
+        Right now, my plan is to use the badgeid to search for the corresponding ids in the database, 
+        test if the id matches with the given timestamp, and then feed that into the find method and the add it to the list.
     */
     
     public ArrayList<Punch> list(Badge badge, LocalDate timestamp) {
@@ -119,17 +122,21 @@ public class PunchDAO {
 
                 ps = conn.prepareStatement(QUERY_FIND_BADGEID);
                 ps.setString(1, badge.getId());
+                ps.setDate(2, java.sql.Date.valueOf(timestamp));
 
                 boolean hasresults = ps.execute();
 
                 if (hasresults) {
 
                     rs = ps.getResultSet();
+                    PunchDAO punchDAO = new PunchDAO(daoFactory);
 
                     while (rs.next()) {
                         
                         Integer id = rs.getInt("id");
                         
+                        Punch punch = punchDAO.find(id);
+                        list.add(punch);
                         String timeString = rs.getString("timestamp");
                         LocalDate date = LocalDate.parse(timeString, formatter);
                         
@@ -137,6 +144,41 @@ public class PunchDAO {
                             
                             list.add(find(id));
                             
+                        }
+                        
+                    }
+                    
+                    //If last pucnh is CLOCK_IN, next day must be checked for closing pair
+                    int lastIndex = list.size();
+                    Punch lastPunchIndex = list.get(lastIndex - 1);
+                    
+                    EventType lastPunch = lastPunchIndex.getPunchtype();
+                    
+                    if(lastPunch == EventType.CLOCK_IN){
+                        //ps = conn.prepareStatement(QUERY_LIST_NEXT_DAY);
+                        
+                        ps.setString(1,badge.getId());
+                        ps.setDate(2, java.sql.Date.valueOf(timestamp));
+                        
+                        boolean hasresults2 = ps.execute();
+                        
+                        if(hasresults2){
+                            
+                            rs = ps.getResultSet();
+                            
+                            while(rs.next()){
+                                
+                                //Find Punch type for next day
+                                
+                                Integer id = rs.getInt("id");
+                                Punch firstPunchDay3 = punchDAO.find(id);
+                                EventType firstPunchOfDay = firstPunchDay3.getPunchtype();
+                                
+                                if ((firstPunchOfDay == EventType.CLOCK_OUT) || (firstPunchOfDay == EventType.TIME_OUT)){
+                                    
+                                    list.add(firstPunchDay3);
+                                }
+                            }
                         }
                         
                     }
