@@ -1,7 +1,10 @@
 package edu.jsu.mcis.cs310.tas_sp23;
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> department
 public class Department {
     private int departmentid, terminalid;
     private String description;
@@ -35,9 +38,18 @@ public class Department {
     public void setDescription(String description) {
         this.description = description;
     }
+<<<<<<< HEAD
     
     @Override
     public String toString() {
         return String.format("#%d (%s), Terminal ID: %d", departmentid, description, terminalid);
+=======
+
+    @Override
+    public String toString() {
+        return "#" + departmentid +
+                " (" + description + "), " +
+                "Terminal ID: " + terminalid;
+>>>>>>> department
     }
 }

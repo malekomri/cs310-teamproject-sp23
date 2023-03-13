@@ -42,6 +42,7 @@ public final class DAOFactory {
         return new PunchDAO(this);
     }
 
+<<<<<<< HEAD
     public ShiftDAO getShiftDAO() {
         return new ShiftDAO(this);
     }
@@ -59,4 +60,7 @@ public final class DAOFactory {
         return departmentDAO.find(departmentID);
     }
     
+=======
+    public DepartmentDAO getDepartmentDAO() {return new DepartmentDAO(this); }
+>>>>>>> department
 }
