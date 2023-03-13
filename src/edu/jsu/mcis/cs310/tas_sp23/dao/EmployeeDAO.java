@@ -20,54 +20,55 @@ public class EmployeeDAO {
     }
 
     public Employee find(int id) throws SQLException {
-        Employee employee = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            Connection conn = daoFactory.getConnection();
-            if (conn.isValid(0)) {
-                ps = conn.prepareStatement(QUERY_FIND_BY_ID);
-                ps.setInt(1, id);
-                boolean hasResults = ps.execute();
-                if (hasResults) {
-                    rs = ps.getResultSet();
-                    if (rs.next()) {
-                        String firstName = rs.getString("firstname");
-                        String middleName = rs.getString("middlename");
-                        String lastName = rs.getString("lastname");
-                        String badgeId = rs.getString("badgeid");
-                        int typeId = rs.getInt("employeetypeid");
-                        int departmentId = rs.getInt("departmentid");
-                        LocalDateTime active = rs.getTimestamp("active").toLocalDateTime();
-                        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
-                        Badge badge = badgeDAO.find(badgeId);
-                        DepartmentDAO departmentDAO = daoFactory.getDepartmentDAO();
-                        Department department = departmentDAO.find(departmentId);
-                        EmployeeType type = EmployeeType.values()[typeId - 1];
-                        employee = new Employee(id, firstName, middleName, lastName, active, badge, department, null, type);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            throw new SQLException("Unable to find employee with ID " + id, e);
-        } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    throw new SQLException(e.getMessage(), e);
-                }
-            }
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    throw new SQLException(e.getMessage(), e);
+    Employee employee = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    try {
+        Connection conn = daoFactory.getConnection();
+        if (conn.isValid(0)) {
+            ps = conn.prepareStatement(QUERY_FIND_BY_ID);
+            ps.setInt(1, id);
+            boolean hasResults = ps.execute();
+            if (hasResults) {
+                rs = ps.getResultSet();
+                if (rs.next()) {
+                    String firstName = rs.getString("firstname");
+                    String middleName = rs.getString("middlename");
+                    String lastName = rs.getString("lastname");
+                    String badgeId = rs.getString("badgeid");
+                    int typeId = rs.getInt("employeetypeid");
+                    int departmentId = rs.getInt("departmentid");
+                    LocalDateTime active = rs.getTimestamp("active").toLocalDateTime();
+                    BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+                    Badge badge = badgeDAO.find(badgeId);
+                    DepartmentDAO departmentDAO = daoFactory.getDepartmentDAO();
+                    Department department = departmentDAO.find(departmentId);
+                    EmployeeType type = EmployeeType.getTypeById(typeId);
+                    employee = new Employee(id, firstName, middleName, lastName, active, badge, department, null, type);
                 }
             }
         }
-        return employee;
+    } catch (SQLException e) {
+        throw new SQLException("Unable to find employee with ID " + id, e);
+    } finally {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                throw new SQLException(e.getMessage(), e);
+            }
+        }
+        if (ps != null) {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                throw new SQLException(e.getMessage(), e);
+            }
+        }
     }
+    return employee;
+}
+
     
     
     public Employee find(Badge badge) {

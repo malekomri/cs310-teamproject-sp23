@@ -58,10 +58,6 @@ public class Employee {
         DepartmentDAO departmentDAO = daoFactory.getDepartmentDAO();
         return departmentDAO.find(this.department.getDepartmentid());
     }
-    
-    
-    
-    
 
     public Shift getShift() {
         return shift;
@@ -71,14 +67,26 @@ public class Employee {
         return type;
     }
 
-   
-   
+  
     
    
+    public static EmployeeType getTypeById(int id) {
+        switch (id) {
+            case 1:
+                return EmployeeType.FULL_TIME;
+            case 0:
+                return EmployeeType.PART_TIME;
+            default:
+                throw new IllegalArgumentException("Invalid EmployeeType id: " + id);
+        }
+    }
+    
+    
+
     @Override
     public String toString() {
         String activeDate = active.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
         String middle = (middleName != null && !middleName.isEmpty()) ? " " + middleName + " " : " ";
-        return "ID #" + id + ": " + lastName + ", " + firstName + middle + "(#" + badge.getId() + "), Type: " + getType() + ", Department: " + department.getDescription() + ", Active: " + activeDate;
-    }}
-    
+        return "ID #" + id + ": " + lastName + ", " + firstName + middle + "(#" + badge.getId() + "), Type: "+ getType()+", Department: " +department.getDescription() + ", Active: " + activeDate;
+    }
+}
