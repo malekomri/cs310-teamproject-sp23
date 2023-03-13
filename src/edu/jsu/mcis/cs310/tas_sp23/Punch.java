@@ -50,6 +50,11 @@ public class Punch {
     public Badge badge() {
         return badge;
     }
+
+    public Badge getBadge() {
+        return badge;
+    }
+    
     
     public Integer getId() {
         return id;

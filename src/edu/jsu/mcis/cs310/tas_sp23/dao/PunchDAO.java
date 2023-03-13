@@ -2,6 +2,8 @@ package edu.jsu.mcis.cs310.tas_sp23.dao;
 
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import edu.jsu.mcis.cs310.tas_sp23.Badge;
+import edu.jsu.mcis.cs310.tas_sp23.Department;
+import edu.jsu.mcis.cs310.tas_sp23.Employee;
 import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -94,4 +96,86 @@ public class PunchDAO {
         return punch;
 
     }
+
+    public int create(Punch punch) {
+
+        int punchID = 0;
+    
+        PreparedStatement psInsert = null;
+        PreparedStatement psCheck = null;
+        ResultSet rs = null;
+    
+        try {
+    
+            Connection conn = daoFactory.getConnection();
+            final String QUERY_INSERT = "INSERT INTO event (terminalid, badgeid, eventtypeid, originaltimestamp) VALUES (?, ?, ?, ?)";
+
+    
+            // Check if the punch is authorized
+            int terminalID = punch.getTerminalid();
+            Badge badgeID = punch.badge();
+            EventType eventType = punch.getPunchtype();
+            LocalDateTime originalTimeStamp = punch.getOriginaltimestamp();
+            BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+            Badge badge = badgeDAO.find(badgeID.getId());
+            EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
+            Employee employee = employeeDAO.find(badgeID);
+            DepartmentDAO departmentDAO = daoFactory.getDepartmentDAO();
+            Department department = departmentDAO.find(employee.getId());
+            int clockTerminalID = department.getTerminalid();
+    
+            // Manually added punches are automatically authorized
+            if (terminalID == 0) {
+                clockTerminalID = 0;
+            }
+    
+            // Check if the punch is authorized
+            if (terminalID == clockTerminalID) {
+    
+                // Insert new punch into the database
+                psInsert = conn.prepareStatement(QUERY_INSERT, Statement.RETURN_GENERATED_KEYS);
+                psInsert.setInt(1, terminalID);
+                psInsert.setString(2, badgeID.getId());
+                psInsert.setInt(3, eventType.ordinal());
+                psInsert.setString(4, originalTimeStamp.toString());
+                psInsert.executeUpdate();
+    
+                // Get the generated ID of the new punch
+                rs = psInsert.getGeneratedKeys();
+                if (rs != null && rs.next()) {
+                    punchID = rs.getInt(1);
+                }
+    
+            }
+    
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+            if (psCheck != null) {
+                try {
+                    psCheck.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+            if (psInsert != null) {
+                try {
+                    psInsert.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+        }
+    
+        return punchID;
+    
+    }
+    
 }
