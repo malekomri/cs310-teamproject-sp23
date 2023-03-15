@@ -47,9 +47,11 @@ public class Punch {
         return terminalid;
     }
     
+
     public Badge getBadge() {
         return badge;
     }
+    
     
     public Integer getId() {
         return id;
