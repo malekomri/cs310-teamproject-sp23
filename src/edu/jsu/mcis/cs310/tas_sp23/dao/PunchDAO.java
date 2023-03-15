@@ -2,6 +2,7 @@ package edu.jsu.mcis.cs310.tas_sp23.dao;
 
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import edu.jsu.mcis.cs310.tas_sp23.Badge;
+import edu.jsu.mcis.cs310.tas_sp23.Department;
 import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import java.sql.*;
 import java.time.LocalDate;
@@ -144,42 +145,7 @@ public class PunchDAO {
                         
                     }
                     
-                    /*
-                    
-                    //If last pucnh is CLOCK_IN, next day must be checked for closing pair
-                    int lastIndex = list.size();
-                    Punch lastPunchIndex = list.get(lastIndex - 1);
-                    
-                    EventType lastPunch = lastPunchIndex.getPunchtype();
-                    
-                    if(lastPunch == EventType.CLOCK_IN){
-                        //ps = conn.prepareStatement(QUERY_LIST_NEXT_DAY);
-                        
-                        ps.setString(1,badge.getId());
-                        ps.setDate(2, java.sql.Date.valueOf(timestamp));
-                        
-                        hasresults = ps.execute();
-                        
-                        if(hasresults){
-                            
-                            rs = ps.getResultSet();
-                            
-                            while(rs.next()){
-                                
-                                //Find Punch type for next day
-                                
-                                Integer id = rs.getInt("id");
-                                Punch firstPunchDay3 = punchDAO.find(id);
-                                EventType firstPunchOfDay = firstPunchDay3.getPunchtype();
-                                
-                                if ((firstPunchOfDay == EventType.CLOCK_OUT) || (firstPunchOfDay == EventType.TIME_OUT)){
-                                    
-                                    list.add(firstPunchDay3);
-                                }
-                            }
-                        }
-                    }
-                    */
+                   
                 }
 
             }
@@ -211,7 +177,52 @@ public class PunchDAO {
 
     }
     
-    public Punch create() {
-        return null;
+    public int create(Punch punch) {
+        int employeeId = Integer.parseInt(punch.getBadge().getId());
+        LocalDateTime timestamp = punch.getOriginaltimestamp();
+    
+        // Retrieve the department of the employee
+        DepartmentDAO departmentDao = daoFactory.getDepartmentDAO();
+        Department department = departmentDao.find(employeeId);
+    
+        // Check if the punch originates from the correct clock terminal
+        if (department == null || punch.getTerminalid() != department.getTerminalid()) {
+            return 0; // authorization failed, return default value
+        }
+    
+        int terminalId = department.getTerminalid();
+    
+        try {
+            Connection conn = daoFactory.getConnection();
+            PreparedStatement statement = conn.prepareStatement(
+                "INSERT INTO event (badgeid, terminalid, eventtypeid, originaltimestamp) " +
+                "VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, punch.getBadge().getId());
+            statement.setInt(2, terminalId);
+            statement.setString(3, punch.getPunchtype().toString());
+            statement.setObject(4, timestamp);
+    
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                return 0; // insertion failed, return default value
+            }
+    
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int id = generatedKeys.getInt(1);
+                punch.setId(id);
+                return id;
+            } else {
+                return 0; // insertion failed, return default value
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
     }
-}
+    
+    }
+    
+    
+    
+    
+    

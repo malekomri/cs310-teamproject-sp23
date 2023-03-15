@@ -6,12 +6,12 @@ import java.time.format.DateTimeFormatter;
 public class Punch {
     
     //Instances
-    private final Integer terminalid;
-    private final Badge badge;
-    private final EventType punchtype;
-    private final Integer id;
-    private final LocalDateTime originaltimestamp;
-    private final LocalDateTime adjustedtimestamp;
+    private  Integer terminalid;
+    private  Badge badge;
+    private  EventType punchtype;
+    private  Integer id;
+    private  LocalDateTime originaltimestamp;
+    private  LocalDateTime adjustedtimestamp;
     
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
     
@@ -69,6 +69,36 @@ public class Punch {
         return adjustedtimestamp;
     }
     
+    //Setters
+
+    public void setTerminalid(Integer terminalid) {
+        this.terminalid = terminalid;
+    }
+    
+    public void setBadge(Badge badge) {
+        this.badge = badge;
+    }
+    
+    public void setPunchtype(EventType punchtype) {
+        this.punchtype = punchtype;
+    }
+    
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
+    public void setOriginaltimestamp(LocalDateTime originaltimestamp) {
+        this.originaltimestamp = originaltimestamp;
+    }
+    
+    public void setAdjustedtimestamp(LocalDateTime adjustedtimestamp) {
+        this.adjustedtimestamp = adjustedtimestamp;
+    }
+    
+    public void setAdjustmenttype(PunchAdjustmentType adjustmenttype) {
+        this.adjustmenttype = adjustmenttype;
+    }
+
     //toString Methods
     public String printOriginal() {
         
