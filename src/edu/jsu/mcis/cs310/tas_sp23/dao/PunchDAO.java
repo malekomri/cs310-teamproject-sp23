@@ -7,13 +7,14 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class PunchDAO {
 
     private static final String QUERY_FIND_ID = "SELECT * FROM event WHERE id = ?";
-    private static final String QUERY_FIND_BADGEID = "SELECT * FROM event WHERE badgeid = ?";
-    //private static final String QUERY_LIST_NEXT_DAY = "SELECT *, DATE('timestamp') AS tsdate FROM event WHERE badgeid = ? ORDER BY 'timestamp' LIMIT 1;";
+    private static final String QUERY_FIND_BADGEID = "SELECT * FROM event WHERE badgeid = ? ORDER BY  timestamp";
+    private static final String QUERY_LIST_NEXT_DAY = "SELECT * FROM event WHERE timestamp = ? ORDER BY timestamp";
 
     private final DAOFactory daoFactory;
 
@@ -122,7 +123,6 @@ public class PunchDAO {
 
                 ps = conn.prepareStatement(QUERY_FIND_BADGEID);
                 ps.setString(1, badge.getId());
-                //ps.setDate(2, java.sql.Date.valueOf(timestamp));
 
                 boolean hasresults = ps.execute();
 
@@ -144,19 +144,17 @@ public class PunchDAO {
                         
                     }
                     
-                    /*
                     
-                    //If last pucnh is CLOCK_IN, next day must be checked for closing pair
+                    //If last punch is CLOCK_IN, next day must be checked for closing pair
                     int lastIndex = list.size();
-                    Punch lastPunchIndex = list.get(lastIndex - 1);
+                    Punch lastPunch = list.get(lastIndex - 1);
                     
-                    EventType lastPunch = lastPunchIndex.getPunchtype();
+                    EventType lastPunchType = lastPunch.getPunchtype();
                     
-                    if(lastPunch == EventType.CLOCK_IN){
-                        //ps = conn.prepareStatement(QUERY_LIST_NEXT_DAY);
+                    if(lastPunchType == EventType.CLOCK_IN){
                         
-                        ps.setString(1,badge.getId());
-                        ps.setDate(2, java.sql.Date.valueOf(timestamp));
+                        ps = conn.prepareStatement(QUERY_LIST_NEXT_DAY);
+                        ps.setString(1, badge.getId());
                         
                         hasresults = ps.execute();
                         
@@ -168,20 +166,34 @@ public class PunchDAO {
                                 
                                 //Find Punch type for next day
                                 
+                                String badgeId = rs.getString("badgeid");
                                 Integer id = rs.getInt("id");
-                                Punch firstPunchDay3 = punchDAO.find(id);
-                                EventType firstPunchOfDay = firstPunchDay3.getPunchtype();
+                                String timeString = rs.getString("timestamp");
+                        
+                                LocalDateTime dateTime = LocalDateTime.parse(timeString, formatter);
+                                LocalDate date = dateTime.toLocalDate();
                                 
-                                if ((firstPunchOfDay == EventType.CLOCK_OUT) || (firstPunchOfDay == EventType.TIME_OUT)){
+                                LocalDate lastPunchDate = lastPunch.getOriginaltimestamp().toLocalDate();
+                                
+                                String lastPunchBadgeId = lastPunch.getBadge().getId();
+                                
+                                if (lastPunchBadgeId.equals(badgeId)) {
+                                    if (ChronoUnit.DAYS.between(lastPunchDate, date) == 1) {
+                                        
+                                        Punch nextDayPunch = find(id);
+                                        EventType nextDayPunchType = nextDayPunch.getPunchtype();
+                                
+                                        if ((nextDayPunchType == EventType.CLOCK_OUT) || (nextDayPunchType == EventType.TIME_OUT)){
                                     
-                                    list.add(firstPunchDay3);
+                                            list.add(nextDayPunch);
+                                    
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
-                    */
                 }
-
             }
 
         } catch (SQLException e) {
