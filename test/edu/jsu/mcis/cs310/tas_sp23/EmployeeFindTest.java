@@ -87,5 +87,87 @@ public class EmployeeFindTest {
         assertEquals("ID #93: Leist, Rodney J (#C1E4758D), Type: Temporary / Part-Time, Department: Warehouse, Active: 10/09/2015", e4.toString());
 
     }
-    
+
+    @Test
+    public void testFindEmployee5() throws SQLException {
+
+
+        EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
+
+        /* Retrieve Employee from Database (by ID) */
+
+        Employee e5 = employeeDAO.find(93);
+
+        /* Compare to Expected Values */
+
+        assertEquals("ID #93: Leist, Rodney J (#C1E4758D), Type: Temporary / Part-Time, Department: Warehouse, Active: 10/09/2015", e5.toString());
+
+    }
+
+    @Test
+    public void testFindEmployee6() {
+
+        EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
+        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+
+        /* Retrieve Employee from Database (by badge) */
+
+        Badge b = badgeDAO.find("021890C0");
+        Employee e6 = employeeDAO.find(b);
+
+        /* Compare to Expected Values */
+
+        assertEquals("ID #1: Chapell, George R (#021890C0), Type: Temporary / Part-Time, Department: Assembly, Active: 04/02/2016", e6.toString());
+
+    }
+
+    @Test
+    public void testFindEmployee7() {
+
+        EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
+        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+
+        /* Retrieve Employee from Database (by badge) */
+
+        Badge b = badgeDAO.find("0FFA272B");
+        Employee e7 = employeeDAO.find(b);
+
+        /* Compare to Expected Values */
+
+        assertEquals("ID #8: Corwin, John L (#0FFA272B), Type: Full-Time, Department: Press, Active: 10/11/2015", e7.toString());
+
+    }
+
+    @Test
+    public void testFindEmployee8() throws SQLException {
+
+
+        EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
+
+        /* Retrieve Employee from Database (by ID) */
+
+        Employee e8 = employeeDAO.find(8);
+
+        /* Compare to Expected Values */
+
+        assertEquals("ID #8: Corwin, John L (#0FFA272B), Type: Full-Time, Department: Press, Active: 10/11/2015", e8.toString());
+
+    }
+
+    @Test
+    public void testFindEmployee9() {
+
+        EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
+        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+
+        /* Retrieve Employee from Database (by badge) */
+
+        Badge b = badgeDAO.find("08D01475");
+        Employee e9 = employeeDAO.find(b);
+
+        /* Compare to Expected Values */
+
+        assertEquals("ID #4: Littell, Amie D (#08D01475), Type: Full-Time, Department: Grinding, Active: 01/22/2017", e9.toString());
+
+    }
 }
