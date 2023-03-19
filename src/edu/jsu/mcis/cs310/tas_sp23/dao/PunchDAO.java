@@ -7,14 +7,13 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class PunchDAO {
 
     private static final String QUERY_FIND_ID = "SELECT * FROM event WHERE id = ?";
-    private static final String QUERY_FIND_BADGEID = "SELECT * FROM event WHERE badgeid = ? ORDER BY  timestamp";
-    private static final String QUERY_LIST_NEXT_DAY = "SELECT * FROM event WHERE timestamp = ? ORDER BY timestamp";
+    private static final String QUERY_LIST_BADGEID = "SELECT *, DATE(timestamp) AS tsdate FROM event WHERE badgeid = ? HAVING tsdate = ? ORDER BY timestamp";
+    private static final String QUERY_LIST_BADGEID_NEXTDAY = "SELECT *, DATE(timestamp) AS tsdate FROM event WHERE badgeid = ? HAVING tsdate > ? ORDER BY timestamp LIMIT 1";
 
     private final DAOFactory daoFactory;
 
@@ -100,17 +99,10 @@ public class PunchDAO {
 
     }
     
-    /*
-        The find method takes an id and creates a punch object using the information from the database. 
-        Right now, my plan is to use the badgeid to search for the corresponding ids in the database, 
-        test if the id matches with the given timestamp, and then feed that into the find method and the add it to the list.
-    */
     
     public ArrayList<Punch> list(Badge badge, LocalDate timestamp) {
 
         ArrayList<Punch> list = new ArrayList<>();
-        
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -121,8 +113,9 @@ public class PunchDAO {
 
             if (conn.isValid(0)) {
 
-                ps = conn.prepareStatement(QUERY_FIND_BADGEID);
+                ps = conn.prepareStatement(QUERY_LIST_BADGEID);
                 ps.setString(1, badge.getId());
+                ps.setDate(2, java.sql.Date.valueOf(timestamp));
 
                 boolean hasresults = ps.execute();
 
@@ -133,14 +126,8 @@ public class PunchDAO {
                     while (rs.next()) {
                         
                         Integer id = rs.getInt("id");
-                        String timeString = rs.getString("timestamp");
                         
-                        LocalDateTime dateTime = LocalDateTime.parse(timeString, formatter);
-                        LocalDate date = dateTime.toLocalDate();
-                        
-                        if (timestamp.equals(date)) {
-                            list.add(find(id));
-                        }
+                        list.add(find(id));
                         
                     }
                     
@@ -151,10 +138,11 @@ public class PunchDAO {
                     
                     EventType lastPunchType = lastPunch.getPunchtype();
                     
-                    if(lastPunchType == EventType.CLOCK_IN){
+                    if (lastPunchType == EventType.CLOCK_IN){
                         
-                        ps = conn.prepareStatement(QUERY_LIST_NEXT_DAY);
+                        ps = conn.prepareStatement(QUERY_LIST_BADGEID_NEXTDAY);
                         ps.setString(1, badge.getId());
+                        ps.setDate(2, java.sql.Date.valueOf(timestamp));
                         
                         hasresults = ps.execute();
                         
@@ -164,31 +152,15 @@ public class PunchDAO {
                             
                             while(rs.next()){
                                 
-                                //Find Punch type for next day
-                                
-                                String badgeId = rs.getString("badgeid");
                                 Integer id = rs.getInt("id");
-                                String timeString = rs.getString("timestamp");
-                        
-                                LocalDateTime dateTime = LocalDateTime.parse(timeString, formatter);
-                                LocalDate date = dateTime.toLocalDate();
                                 
-                                LocalDate lastPunchDate = lastPunch.getOriginaltimestamp().toLocalDate();
-                                
-                                String lastPunchBadgeId = lastPunch.getBadge().getId();
-                                
-                                if (lastPunchBadgeId.equals(badgeId)) {
-                                    if (ChronoUnit.DAYS.between(lastPunchDate, date) == 1) {
+                                Punch nextDayPunch = find(id);
+                                EventType nextDayPunchType = nextDayPunch.getPunchtype();
                                         
-                                        Punch nextDayPunch = find(id);
-                                        EventType nextDayPunchType = nextDayPunch.getPunchtype();
-                                
-                                        if ((nextDayPunchType == EventType.CLOCK_OUT) || (nextDayPunchType == EventType.TIME_OUT)){
+                                if ((nextDayPunchType == EventType.CLOCK_OUT) || (nextDayPunchType == EventType.TIME_OUT)){
                                     
-                                            list.add(nextDayPunch);
+                                    list.add(nextDayPunch);
                                     
-                                        }
-                                    }
                                 }
                             }
                         }
@@ -221,9 +193,5 @@ public class PunchDAO {
 
         return list;
 
-    }
-    
-    public Punch create() {
-        return null;
     }
 }
