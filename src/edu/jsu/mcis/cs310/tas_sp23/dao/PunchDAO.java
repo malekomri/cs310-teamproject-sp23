@@ -196,6 +196,68 @@ public class PunchDAO {
 
     }
     
+    
+    public ArrayList<Punch> list(Badge badge, LocalDate begin, LocalDate end) {
+            
+        ArrayList<Punch> list = new ArrayList<>();
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+
+            Connection conn = daoFactory.getConnection();
+
+            if (conn.isValid(0)) {
+
+                //ps = conn.prepareStatement();
+                //ps.setString();
+                //ps.setDate();
+
+                boolean hasresults = ps.execute();
+
+                if (hasresults) {
+
+                    rs = ps.getResultSet();
+
+                    while (rs.next()) {
+                        
+                        Integer id = rs.getInt("id");
+                        
+                        list.add(find(id));
+                        
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+
+            throw new DAOException(e.getMessage());
+
+        } finally {
+
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+
+        }
+
+        return list;
+
+    }
+    
+    
     public int create(Punch punch) {
         String badgeId = punch.getBadge().getId();
         LocalDateTime timestamp = punch.getOriginaltimestamp();
