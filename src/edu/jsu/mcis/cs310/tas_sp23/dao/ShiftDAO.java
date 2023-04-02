@@ -5,7 +5,8 @@ import edu.jsu.mcis.cs310.tas_sp23.Shift;
 import java.sql.*;
 
 public class ShiftDAO {
-
+    
+    //MySQL query statement
     private static final String QUERY_FIND = "SELECT * FROM shift WHERE id = ?";
 
     private final DAOFactory daoFactory;
@@ -15,7 +16,8 @@ public class ShiftDAO {
         this.daoFactory = daoFactory;
 
     }
-
+    
+    //Find by id method
     public Shift find(int id) {
 
         Shift shift = null;
@@ -40,6 +42,7 @@ public class ShiftDAO {
                     
                     while (rs.next()) {
                         
+                        //Initializing shift instances from database keys
                         String description = rs.getString("description");
                         String shiftStart = rs.getString("shiftstart");
                         String shiftStop = rs.getString("shiftstop");
@@ -49,6 +52,8 @@ public class ShiftDAO {
                         String lunchStart = rs.getString("lunchStart");
                         String lunchStop = rs.getString("lunchStop");
                         String lunchThreshold = rs.getString("lunchThreshold");
+                        
+                        //Building a new shift object
                         shift = new Shift(id, description, shiftStart, shiftStop, roundInteral, gracePeriod, dockPenalty, lunchStart, lunchStop, lunchThreshold);
                         
                     }
@@ -80,6 +85,7 @@ public class ShiftDAO {
         
     }
 
+    //Find by badge method
     public Shift find(Badge badge) {
         
         Shift shift = null;
@@ -93,6 +99,7 @@ public class ShiftDAO {
             
             if (conn.isValid(0)) {
                 
+                //MySQL query statement
                 String query = "SELECT * FROM shift WHERE id = (SELECT shiftid FROM employee WHERE badgeid = ?)";
                 
                 ps = conn.prepareStatement(query);

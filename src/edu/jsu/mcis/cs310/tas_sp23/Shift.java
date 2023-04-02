@@ -9,11 +9,13 @@ import java.util.logging.Logger;
 
 public class Shift {
     
+    //Declaring Shift instances
     private final int id;
     private final String description, shiftStart, shiftStop, roundInterval;
     private final String gracePeriod, dockPenalty, lunchStart, lunchStop, lunchThreshold;
     private long shiftDuration, lunchDuration;
     
+    //Shift constructor 
     public Shift(int id, String description, String shiftStart, String shiftStop, String roundInterval, String gracePeriod, String dockPenalty, String lunchStart, String lunchStop, String lunchThreshold ){
         this.id = id;
         this.description = description;
@@ -27,6 +29,7 @@ public class Shift {
         this.lunchThreshold = lunchThreshold;
     }
     
+    //Getters for individual Shift instances
     public int getId(){
         return id;
     }
@@ -67,16 +70,19 @@ public class Shift {
         return lunchThreshold;
     }
     
+    //Method to return the time in minutes of a shift
     public long setShiftDuration(String shiftStart, String shiftStop) throws ParseException {
         shiftDuration = Duration.between(LocalTime.parse(shiftStart), LocalTime.parse(shiftStop)).toMinutes();
         return shiftDuration;
     }
     
+    //Method to return the time in minutes of a lunch break
     public long setLunchDuration(String lunchStart, String lunchStop) throws ParseException {
         lunchDuration = Duration.between(LocalTime.parse(lunchStart), LocalTime.parse(lunchStop)).toMinutes();
         return lunchDuration;
     }
     
+    //toString method
     @Override
     public String toString(){  
         try{
