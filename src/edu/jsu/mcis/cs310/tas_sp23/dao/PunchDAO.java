@@ -134,34 +134,38 @@ public class PunchDAO {
                     }
                     
                     //If last punch is CLOCK_IN, next day must be checked for closing pair
-                    int lastIndex = list.size();
-                    Punch lastPunch = list.get(lastIndex - 1);
+                    if (!list.isEmpty()) {
+                        
+                        int lastIndex = list.size();
+                        
+                        Punch lastPunch = list.get(lastIndex - 1);
+                        
+                        EventType lastPunchType = lastPunch.getPunchtype();
                     
-                    EventType lastPunchType = lastPunch.getPunchtype();
-                    
-                    if (lastPunchType == EventType.CLOCK_IN){
+                        if (lastPunchType == EventType.CLOCK_IN){
                         
-                        ps = conn.prepareStatement(QUERY_LIST_BADGEID_NEXTDAY);
-                        ps.setString(1, badge.getId());
-                        ps.setDate(2, java.sql.Date.valueOf(timestamp));
+                            ps = conn.prepareStatement(QUERY_LIST_BADGEID_NEXTDAY);
+                            ps.setString(1, badge.getId());
+                            ps.setDate(2, java.sql.Date.valueOf(timestamp));
                         
-                        hasresults = ps.execute();
+                            hasresults = ps.execute();
                         
-                        if(hasresults){
+                            if(hasresults){
                             
-                            rs = ps.getResultSet();
+                                rs = ps.getResultSet();
                             
-                            while(rs.next()){
+                                while(rs.next()){
                                 
-                                Integer id = rs.getInt("id");
+                                    Integer id = rs.getInt("id");
                                 
-                                Punch nextDayPunch = find(id);
-                                EventType nextDayPunchType = nextDayPunch.getPunchtype();
+                                    Punch nextDayPunch = find(id);
+                                    EventType nextDayPunchType = nextDayPunch.getPunchtype();
                                         
-                                if ((nextDayPunchType == EventType.CLOCK_OUT) || (nextDayPunchType == EventType.TIME_OUT)){
+                                    if ((nextDayPunchType == EventType.CLOCK_OUT) || (nextDayPunchType == EventType.TIME_OUT)){
                                     
-                                    list.add(nextDayPunch);
+                                        list.add(nextDayPunch);
                                     
+                                    }
                                 }
                             }
                         }
@@ -199,62 +203,27 @@ public class PunchDAO {
     
     public ArrayList<Punch> list(Badge badge, LocalDate begin, LocalDate end) {
             
-        ArrayList<Punch> list = new ArrayList<>();
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+        ArrayList<Punch> rangeList = new ArrayList<>();
+        
+        LocalDate currentDay = begin;
 
         try {
-
-            Connection conn = daoFactory.getConnection();
-
-            if (conn.isValid(0)) {
-
-                //ps = conn.prepareStatement();
-                //ps.setString();
-                //ps.setDate();
-
-                boolean hasresults = ps.execute();
-
-                if (hasresults) {
-
-                    rs = ps.getResultSet();
-
-                    while (rs.next()) {
-                        
-                        Integer id = rs.getInt("id");
-                        
-                        list.add(find(id));
-                        
-                    }
-                }
+            
+            while (currentDay.isBefore(end.plusDays(1))) {
+                    
+                    rangeList.addAll(list(badge, currentDay));
+                    currentDay = currentDay.plusDays(1);
+                    
             }
-
-        } catch (SQLException e) {
-
+            
+        } catch (Exception e) {
+            
             throw new DAOException(e.getMessage());
-
-        } finally {
-
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    throw new DAOException(e.getMessage());
-                }
-            }
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    throw new DAOException(e.getMessage());
-                }
-            }
-
-        }
-
-        return list;
-
+            
+        } 
+        
+        return rangeList;
+        
     }
     
     
