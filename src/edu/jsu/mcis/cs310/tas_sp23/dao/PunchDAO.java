@@ -209,6 +209,19 @@ public class PunchDAO {
             throw new DAOException(e.getMessage());
         }
     }
+
+    public ArrayList<Punch> list(Badge badge, LocalDate startDate, LocalDate endDate) {
+        ArrayList<Punch> punchesInRange = new ArrayList<>();
+        LocalDate currentDate = startDate;
+
+        while (!currentDate.isAfter(endDate)) {
+            ArrayList<Punch> punchesForDate = list(badge, currentDate);
+            punchesInRange.addAll(punchesForDate);
+            currentDate = currentDate.plusDays(1);
+        }
+
+        return punchesInRange;
+    }
     
     
     }
