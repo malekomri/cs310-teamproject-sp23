@@ -1,7 +1,12 @@
 package edu.jsu.mcis.cs310.tas_sp23;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class Punch {
     
@@ -12,6 +17,8 @@ public class Punch {
     private  Integer id;
     private  LocalDateTime originaltimestamp;
     private  LocalDateTime adjustedtimestamp;
+
+  
     
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
     
@@ -111,6 +118,81 @@ public class Punch {
         return s.toString();
     }
 
+      public void adjust(Shift s) {
+        adjustedtimestamp = originaltimestamp;
+
+        if (punchtype == EventType.TIME_OUT) {
+            adjustmenttype = PunchAdjustmentType.NONE;
+            return;
+        }
+        LocalTime shiftStartTime = LocalTime.parse(s.getShiftStart());
+        LocalTime shiftEndTime = LocalTime.parse(s.getShiftStop());
+        LocalTime lunchStartTime = LocalTime.parse(s.getLunchStart());
+        LocalTime lunchEndTime = LocalTime.parse(s.getLunchStop());
+        
+        LocalDateTime shiftStart = originaltimestamp.withHour(shiftStartTime.getHour()).withMinute(shiftStartTime.getMinute());
+        LocalDateTime shiftEnd = originaltimestamp.withHour(shiftEndTime.getHour()).withMinute(shiftEndTime.getMinute());
+        LocalDateTime lunchStart = originaltimestamp.withHour(lunchStartTime.getHour()).withMinute(lunchStartTime.getMinute());
+        LocalDateTime lunchEnd = originaltimestamp.withHour(lunchEndTime.getHour()).withMinute(lunchEndTime.getMinute());
+        
+        int roundInterval = Integer.parseInt(s.getRoundInterval());
+        int gracePeriod = Integer.parseInt(s.getGracePeriod());
+        int dock = Integer.parseInt(s.getDockPenalty());
+
+        boolean isWeekend = originaltimestamp.getDayOfWeek().getValue() >= 6;
+
+        if (!isWeekend) {
+            Duration startDifference = Duration.between(shiftStart, originaltimestamp);
+            Duration endDifference = Duration.between(originaltimestamp, shiftEnd);
+
+            if (startDifference.toMinutes() < roundInterval && startDifference.toMinutes() >= 0) {
+                adjustedtimestamp = shiftStart;
+                adjustmenttype = PunchAdjustmentType.SHIFT_START;
+            } else if (endDifference.toMinutes() < roundInterval && endDifference.toMinutes() >= 0) {
+                adjustedtimestamp = shiftEnd;
+                adjustmenttype = PunchAdjustmentType.SHIFT_STOP;
+            } else if (startDifference.toMinutes() <= gracePeriod && startDifference.toMinutes() > 0) {
+                adjustedtimestamp = shiftStart;
+                adjustmenttype = PunchAdjustmentType.GRACE;
+            } else if (endDifference.toMinutes() <= gracePeriod && endDifference.toMinutes() > 0) {
+                adjustedtimestamp = shiftEnd;
+                adjustmenttype = PunchAdjustmentType.GRACE;
+            } else if (startDifference.toMinutes() <= dock && startDifference.toMinutes() > gracePeriod) {
+                adjustedtimestamp = shiftStart.plusMinutes(dock);
+                adjustmenttype = PunchAdjustmentType.DOCK;
+            } else if (endDifference.toMinutes() <= dock && endDifference.toMinutes() > gracePeriod) {
+                adjustedtimestamp = shiftEnd.minusMinutes(dock);
+                adjustmenttype = PunchAdjustmentType.DOCK;
+            }
+        }
+
+        if (adjustmenttype == null) {
+            long modInterval = originaltimestamp.toLocalTime().toSecondOfDay() % (roundInterval * 60);
+            if (modInterval < roundInterval * 30) {
+                adjustedtimestamp = adjustedtimestamp.minus(modInterval, ChronoUnit.SECONDS);
+            } else {
+                adjustedtimestamp = adjustedtimestamp.plus(roundInterval * 60 - modInterval, ChronoUnit.SECONDS);
+            }
+            adjustmenttype = PunchAdjustmentType.INTERVAL_ROUND;
+        }
+
+        adjustedtimestamp = adjustedtimestamp.truncatedTo(ChronoUnit.MINUTES);
+    }
+
+
+    public String printAdjusted() {
+        // Assuming you have the following instance variables in your Punch class:
+        // private Timestamp adjustedTimestamp;
+        // private PunchAdjustmentType adjustmentType;
+        // private EventType punchType;
+    
+        
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MM/dd/yyyy HH:mm:ss");
+        String badgeIdString = (badge != null) ? badge.getId() : "UNKNOWN";
+        Date adjustedDate = new Date(adjustedtimestamp.getTime()); // Convert Timestamp to Date
+        return "#" + badgeIdString + " " + (punchtype == EventType.CLOCK_IN ? "CLOCK IN" : "CLOCK OUT") + ": " + dateFormat.format(adjustedDate) + " (" + adjustmenttype.toString() + ")";
+    }
+    
     
     @Override
     public String toString() {
