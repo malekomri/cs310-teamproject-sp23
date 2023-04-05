@@ -181,10 +181,7 @@ public class Punch {
 
 
     public String printAdjusted() {
-        // Assuming you have the following instance variables in your Punch class:
-        // private Timestamp adjustedTimestamp;
-        // private PunchAdjustmentType adjustmentType;
-        // private EventType punchType;
+        
     
         
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MM/dd/yyyy HH:mm:ss");
