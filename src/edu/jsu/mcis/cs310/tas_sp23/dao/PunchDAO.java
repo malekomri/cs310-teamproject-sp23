@@ -14,8 +14,8 @@ import java.util.ArrayList;
 public class PunchDAO {
 
     private static final String QUERY_FIND_ID = "SELECT * FROM event WHERE id = ?";
-    private static final String QUERY_FIND_BADGEID = "SELECT * FROM event WHERE badgeid = ?";
-    //private static final String QUERY_LIST_NEXT_DAY = "SELECT *, DATE('timestamp') AS tsdate FROM event WHERE badgeid = ? ORDER BY 'timestamp' LIMIT 1;";
+    private static final String QUERY_LIST_BADGEID = "SELECT *, DATE(timestamp) AS tsdate FROM event WHERE badgeid = ? HAVING tsdate = ? ORDER BY timestamp";
+    private static final String QUERY_LIST_BADGEID_NEXTDAY = "SELECT *, DATE(timestamp) AS tsdate FROM event WHERE badgeid = ? HAVING tsdate > ? ORDER BY timestamp LIMIT 1";
 
     private final DAOFactory daoFactory;
 
@@ -101,17 +101,10 @@ public class PunchDAO {
 
     }
     
-    /*
-        The find method takes an id and creates a punch object using the information from the database. 
-        Right now, my plan is to use the badgeid to search for the corresponding ids in the database, 
-        test if the id matches with the given timestamp, and then feed that into the find method and the add it to the list.
-    */
     
     public ArrayList<Punch> list(Badge badge, LocalDate timestamp) {
 
         ArrayList<Punch> list = new ArrayList<>();
-        
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -122,9 +115,9 @@ public class PunchDAO {
 
             if (conn.isValid(0)) {
 
-                ps = conn.prepareStatement(QUERY_FIND_BADGEID);
+                ps = conn.prepareStatement(QUERY_LIST_BADGEID);
                 ps.setString(1, badge.getId());
-                //ps.setDate(2, java.sql.Date.valueOf(timestamp));
+                ps.setDate(2, java.sql.Date.valueOf(timestamp));
 
                 boolean hasresults = ps.execute();
 
@@ -135,20 +128,49 @@ public class PunchDAO {
                     while (rs.next()) {
                         
                         Integer id = rs.getInt("id");
-                        String timeString = rs.getString("timestamp");
                         
-                        LocalDateTime dateTime = LocalDateTime.parse(timeString, formatter);
-                        LocalDate date = dateTime.toLocalDate();
-                        
-                        if (timestamp.equals(date)) {
-                            list.add(find(id));
-                        }
+                        list.add(find(id));
                         
                     }
                     
-                   
+                    //If last punch is CLOCK_IN, next day must be checked for closing pair
+                    if (!list.isEmpty()) {
+                        
+                        int lastIndex = list.size();
+                        
+                        Punch lastPunch = list.get(lastIndex - 1);
+                        
+                        EventType lastPunchType = lastPunch.getPunchtype();
+                    
+                        if (lastPunchType == EventType.CLOCK_IN){
+                        
+                            ps = conn.prepareStatement(QUERY_LIST_BADGEID_NEXTDAY);
+                            ps.setString(1, badge.getId());
+                            ps.setDate(2, java.sql.Date.valueOf(timestamp));
+                        
+                            hasresults = ps.execute();
+                        
+                            if(hasresults){
+                            
+                                rs = ps.getResultSet();
+                            
+                                while(rs.next()){
+                                
+                                    Integer id = rs.getInt("id");
+                                
+                                    Punch nextDayPunch = find(id);
+                                    EventType nextDayPunchType = nextDayPunch.getPunchtype();
+                                        
+                                    if ((nextDayPunchType == EventType.CLOCK_OUT) || (nextDayPunchType == EventType.TIME_OUT)){
+                                    
+                                        list.add(nextDayPunch);
+                                    
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-
             }
 
         } catch (SQLException e) {
@@ -177,6 +199,33 @@ public class PunchDAO {
         return list;
 
     }
+    
+    
+    public ArrayList<Punch> list(Badge badge, LocalDate begin, LocalDate end) {
+            
+        ArrayList<Punch> rangeList = new ArrayList<>();
+        
+        LocalDate currentDay = begin;
+
+        try {
+            
+            while (currentDay.isBefore(end.plusDays(1))) {
+                    
+                    rangeList.addAll(list(badge, currentDay));
+                    currentDay = currentDay.plusDays(1);
+                    
+            }
+            
+        } catch (Exception e) {
+            
+            throw new DAOException(e.getMessage());
+            
+        } 
+        
+        return rangeList;
+        
+    }
+    
     
     public int create(Punch punch) {
         String badgeId = punch.getBadge().getId();
