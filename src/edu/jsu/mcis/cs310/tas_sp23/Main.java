@@ -10,6 +10,10 @@ import java.time.format.DateTimeFormatter;
 
 public class Main {
 
+    
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
         
         // test database connectivity; get DAOs

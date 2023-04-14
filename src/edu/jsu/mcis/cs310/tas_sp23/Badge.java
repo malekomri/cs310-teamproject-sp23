@@ -12,23 +12,43 @@ public class Badge {
 
    
 
+    
+    /** 
+     * @return String
+     */
     public String getId() {
         return id;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getDescription() {
         return description;
     }
 
+    
+    /** 
+     * @param id
+     */
     public void setId(String id) {
         this.id = id;
     }
     
+    
+    /** 
+     * @param description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
     
 
+    
+    /** 
+     * @return String
+     */
     @Override
     public String toString() {
 
