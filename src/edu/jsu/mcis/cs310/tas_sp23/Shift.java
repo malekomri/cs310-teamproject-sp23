@@ -1,7 +1,9 @@
 package edu.jsu.mcis.cs310.tas_sp23;
 
 import java.text.ParseException;
+import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,4 +83,19 @@ public class Shift {
  s.append(lunchDuration).append(" minutes)");
  return s.toString();
  }
+
+ public boolean isWeekend(int dayOfWeek) {
+    return (dayOfWeek == DayOfWeek.SATURDAY.getValue() || dayOfWeek == DayOfWeek.SUNDAY.getValue());
 }
+
+public long getShiftStartMinutes() {
+    return Long.parseLong(shiftStart.substring(0, 2)) * 60 + Long.parseLong(shiftStart.substring(3, 5));
+}
+
+public int getRoundIntervalMinutes() {
+    return Integer.parseInt(roundInterval);
+}
+
+
+}
+

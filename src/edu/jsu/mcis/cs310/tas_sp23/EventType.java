@@ -4,7 +4,8 @@ public enum EventType {
 
     CLOCK_OUT("CLOCK OUT"),
     CLOCK_IN("CLOCK IN"),
-    TIME_OUT("TIME OUT");
+    TIME_OUT("TIME OUT"), 
+    TIME_IN("TIME IN");
 
     private final String description;
 

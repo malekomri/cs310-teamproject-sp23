@@ -8,13 +8,18 @@ public enum PunchAdjustmentType {
     SHIFT_DOCK("Shift Dock"),
     LUNCH_START("Lunch Start"),
     LUNCH_STOP("Lunch Stop"),
-    INTERVAL_ROUND("Interval Round");
+    INTERVAL_ROUND("Interval Round"), GRACE_PERIOD;
 
     private final String description;
 
     private PunchAdjustmentType(String d) {
         description = d;
     }
+
+    private PunchAdjustmentType() {
+        description = "";
+    }
+    
 
     @Override
     public String toString() {
