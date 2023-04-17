@@ -11,8 +11,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/**
+* <p>DAO class for handling Punch objects.</p>
+* @author Oakley Pate, Martell Norman
+*/
 public class PunchDAO {
-
+    
+    //SQL Queries
     private static final String QUERY_FIND_ID = "SELECT * FROM event WHERE id = ?";
     private static final String QUERY_LIST_BADGEID = "SELECT *, DATE(timestamp) AS tsdate FROM event WHERE badgeid = ? HAVING tsdate = ? ORDER BY timestamp";
     private static final String QUERY_LIST_BADGEID_NEXTDAY = "SELECT *, DATE(timestamp) AS tsdate FROM event WHERE badgeid = ? HAVING tsdate > ? ORDER BY timestamp LIMIT 1";
@@ -24,7 +29,13 @@ public class PunchDAO {
         this.daoFactory = daoFactory;
 
     }
-
+    
+    /**
+    * <p>This method is used to create a Punch object using the constructors by searching for an id in the database.</p>
+    * @author Oakley Pate, Martell Norman
+    * @param id
+    * @return Punch object created using given id
+    */
     public Punch find(Integer id) {
 
         Punch punch = null;
@@ -101,7 +112,13 @@ public class PunchDAO {
 
     }
     
-    
+    /**
+    * <p>This method is used to create an ArrayList that contains all of one person's punches on a given day.</p>
+    * @author Oakley Pate, Martell Norman
+    * @param badge
+    * @param timestamp
+    * @return the ArrayList that contains the Punch objects
+    */
     public ArrayList<Punch> list(Badge badge, LocalDate timestamp) {
 
         ArrayList<Punch> list = new ArrayList<>();
@@ -200,7 +217,14 @@ public class PunchDAO {
 
     }
     
-    
+    /**
+    * <p>This method is used to aggregate the Punch objects from one person over a given range of dates.</p>
+    * @author Oakley Pate, Martell Norman
+    * @param badge
+    * @param begin
+    * @param end
+    * @return the ArrayList that contains the Punch objects
+    */
     public ArrayList<Punch> list(Badge badge, LocalDate begin, LocalDate end) {
             
         ArrayList<Punch> rangeList = new ArrayList<>();
@@ -226,7 +250,12 @@ public class PunchDAO {
         
     }
     
-    
+    /**
+    * <p>This method is used to add new Punches to the database.</p>
+    * @author Oakley Pate, Martell Norman
+    * @param punch
+    * @return id of the new Punch
+    */
     public int create(Punch punch) {
         String badgeId = punch.getBadge().getId();
         LocalDateTime timestamp = punch.getOriginaltimestamp();
