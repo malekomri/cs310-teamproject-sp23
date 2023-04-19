@@ -1,5 +1,8 @@
 package edu.jsu.mcis.cs310.tas_sp23;
 
+/**
+* <p>This enum is used to define the PunchAdjustmentType constants.</p>
+*/
 public enum PunchAdjustmentType {
 
     NONE("None"),
@@ -15,7 +18,11 @@ public enum PunchAdjustmentType {
     private PunchAdjustmentType(String d) {
         description = d;
     }
-
+    
+    /**
+    * <p>This method is used to print the description variable as a string.</p>
+    * @return description
+    */
     @Override
     public String toString() {
         return description;

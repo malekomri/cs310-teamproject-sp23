@@ -8,8 +8,15 @@ import java.util.*;
 import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
 
+/**
+* <p>This class contains the Main method that runs the program.</p>
+*/
 public class Main {
-
+    
+    /**
+    * <p>This Main method is the primary method that runs the program.</p>
+    * @param args
+    */
     public static void main(String[] args) {
         
         // test database connectivity; get DAOs
