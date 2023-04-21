@@ -1,8 +1,8 @@
 package edu.jsu.mcis.cs310.tas_sp23;
 
 /**
-* <p>Model class for creating and handling Badge objects.</p>
-* @author
+* <p>Model class for creating and handling Department objects.</p>
+* @author Christopher Adkins
 */
 public class Department {
     private int departmentid, terminalid;
@@ -10,7 +10,7 @@ public class Department {
     
     /**
     * <p>Constructor for creating a Department object.</p>
-    * @author
+    * @author Christopher Adkins
     * @param departmentid
     * @param terminalid
     * @param description
@@ -23,7 +23,7 @@ public class Department {
     
     /**
     * <p>This method is used to get the departmentid variable.</p>
-    * @author
+    * @author Christopher Adkins
     * @return departmentid
     */
     public int getDepartmentid() {
@@ -32,7 +32,7 @@ public class Department {
 
     /**
     * <p>This method is used to set the departmentid variable.</p>
-    * @author
+    * @author Christopher Adkins
     * @param departmentid
     */
     public void setDepartmentid(int departmentid) {
@@ -41,7 +41,7 @@ public class Department {
     
     /**
     * <p>This method is used to get the terminalid variable.</p>
-    * @author
+    * @author Christopher Adkins
     * @return terminalid
     */
     public int getTerminalid() {
@@ -50,7 +50,7 @@ public class Department {
     
     /**
     * <p>This method is used to set the terminalid variable.</p>
-    * @author
+    * @author Christopher Adkins
     * @param terminalid
     */
     public void setTerminalid(int terminalid) {
@@ -59,7 +59,7 @@ public class Department {
     
     /**
     * <p>This method is used to get the description variable.</p>
-    * @author
+    * @author Christopher Adkins
     * @return description
     */
     public String getDescription() {
@@ -68,7 +68,7 @@ public class Department {
     
     /**
     * <p>This method is used to set the description variable.</p>
-    * @author
+    * @author Christopher Adkins
     * @param description
     */
     public void setDescription(String description) {
@@ -77,7 +77,7 @@ public class Department {
     
     /**
     * <p>This method is used to format the information contained in a Department object as a string.</p>
-    * @author
+    * @author Christopher Adkins
     * @return The formatted string
     */
     @Override

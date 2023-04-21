@@ -6,6 +6,10 @@ import java.time.format.DateTimeFormatter;
 import edu.jsu.mcis.cs310.tas_sp23.dao.DAOFactory;
 import edu.jsu.mcis.cs310.tas_sp23.dao.DepartmentDAO;
 
+/**
+* <p>Model class for creating and handling Employee objects.</p>
+* @author Malek Omri
+*/
 public class Employee {
     private int id;
     private String firstName;
@@ -19,7 +23,7 @@ public class Employee {
     
     /**
     * <p>Constructor for creating an Employee object.</p>
-    * @author
+    * @author Malek Omri
     * @param id
     * @param firstName
     * @param middleName
@@ -44,7 +48,7 @@ public class Employee {
     
     /**
     * <p>This method is used to get the id variable.</p>
-    * @author
+    * @author Malek Omri
     * @return id
     */
     public int getId() {
@@ -53,7 +57,7 @@ public class Employee {
     
     /**
     * <p>This method is used to get the firstName variable.</p>
-    * @author
+    * @author Malek Omri
     * @return firstName
     */
     public String getFirstName() {
@@ -62,7 +66,7 @@ public class Employee {
     
     /**
     * <p>This method is used to get the middleName variable.</p>
-    * @author
+    * @author Malek Omri
     * @return middleName
     */
     public String getMiddleName() {
@@ -71,7 +75,7 @@ public class Employee {
     
     /**
     * <p>This method is used to get the lastName variable.</p>
-    * @author
+    * @author Malek Omri
     * @return lastName
     */
     public String getLastName() {
@@ -80,7 +84,7 @@ public class Employee {
     
     /**
     * <p>This method is used to get the active variable.</p>
-    * @author
+    * @author Malek Omri
     * @return active
     */
     public LocalDateTime getActive() {
@@ -89,7 +93,7 @@ public class Employee {
     
     /**
     * <p>This method is used to get the badge variable.</p>
-    * @author
+    * @author Malek Omri
     * @return badge
     */
     public Badge getBadge() {
@@ -98,7 +102,7 @@ public class Employee {
     
     /**
     * <p>This method is used to get a Department object.</p>
-    * @author
+    * @author Malek Omri
     * @return Department object
     */
     public Department getDepartment() {
@@ -109,7 +113,7 @@ public class Employee {
     
     /**
     * <p>This method is used to get the shift variable.</p>
-    * @author
+    * @author Malek Omri
     * @return shift
     */
     public Shift getShift() {
@@ -118,18 +122,16 @@ public class Employee {
     
     /**
     * <p>This method is used to get the type variable.</p>
-    * @author
+    * @author Malek Omri
     * @return type
     */
     public EmployeeType getType() {
         return type;
     }
-
-  
     
    /**
     * <p>This method is used to get the Employee type (part-time or full-time) from the id.</p>
-    * @author
+    * @author Malek Omri
     * @param id
     * @return EmployeeType
     */
@@ -147,7 +149,7 @@ public class Employee {
     
     /**
     * <p>This method is used to format the information contained in an Employee object as a string.</p>
-    * @author
+    * @author Malek Omri
     * @return The formatted string
     */
     @Override

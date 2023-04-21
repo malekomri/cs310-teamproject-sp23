@@ -7,6 +7,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+* <p>DAO class for handling Department objects.</p>
+* @author Christopher Adkins
+*/
 public class DepartmentDAO {
     private final DAOFactory daoFactory;
 
@@ -15,7 +19,13 @@ public class DepartmentDAO {
     }
 
     private static final String QUERY_FIND = "SELECT * FROM department WHERE id = ?";
-
+    
+    /**
+    * <p>This method is used to create a Department object using the constructors by searching for an id in the database.</p>
+    * @author Christopher Adkins
+    * @param id
+    * @return Department object created using given id
+    */
     public Department find(int id) {
         Department department = null;
 

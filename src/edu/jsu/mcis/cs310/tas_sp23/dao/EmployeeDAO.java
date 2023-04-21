@@ -9,6 +9,10 @@ import edu.jsu.mcis.cs310.tas_sp23.Shift;
 import java.sql.*;
 import java.time.LocalDateTime;
 
+/**
+* <p>DAO class for handling Employee objects.</p>
+* @author Malek Omri
+*/
 public class EmployeeDAO {
     
     private static final String QUERY_FIND_BY_ID = "SELECT * FROM employee WHERE id = ?";
@@ -18,7 +22,14 @@ public class EmployeeDAO {
     public EmployeeDAO(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
-
+    
+    /**
+    * <p>This method is used to create an Employee object using the constructors by searching for an id in the database.</p>
+    * @author Malek Omri
+    * @param id
+    * @throws SQLException
+    * @return Employee object created using given id
+    */
     public Employee find(int id) throws SQLException {
     Employee employee = null;
     PreparedStatement ps = null;
@@ -70,7 +81,12 @@ public class EmployeeDAO {
 }
 
     
-    
+    /**
+    * <p>This method is used to create an Employee object using the constructors by searching for a badge in the database.</p>
+    * @author Malek Omri
+    * @param badge
+    * @return Employee object created using given badge
+    */
     public Employee find(Badge badge) {
 
         Employee employee = null;

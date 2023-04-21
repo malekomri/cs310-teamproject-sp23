@@ -33,27 +33,52 @@ public final class DAOFactory {
     Connection getConnection() {
         return conn;
     }
-
+    
+    /**
+    * <p>This method is used to get the BadgeDAO.</p>
+    * @return BadgeDAO
+    */
     public BadgeDAO getBadgeDAO() {
         return new BadgeDAO(this);
     }
     
+    /**
+    * <p>This method is used to get the PunchDAO.</p>
+    * @return PunchDAO
+    */
     public PunchDAO getPunchDAO() {
         return new PunchDAO(this);
     }
-
+    
+    /**
+    * <p>This method is used to get the ShiftDAO.</p>
+    * @return ShiftDAO
+    */
     public ShiftDAO getShiftDAO() {
         return new ShiftDAO(this);
     }
-
+    
+    /**
+    * <p>This method is used to get the EmployeeDAO.</p>
+    * @return EmployeeDAO
+    */
     public EmployeeDAO getEmployeeDAO() {
         return new EmployeeDAO(this);
     }
-
+    
+    /**
+    * <p>This method is used to get the DepartmentDAO.</p>
+    * @return DepartmentDAO
+    */
     public DepartmentDAO getDepartmentDAO() {
         return new DepartmentDAO(this);
     }
-
+    
+    /**
+    * <p>This method is used to get the department object.</p>
+    * @param departmentID
+    * @return Department object
+    */
     public Department getDepartment(int departmentID) {
         DepartmentDAO departmentDAO = getDepartmentDAO();
         return departmentDAO.find(departmentID);

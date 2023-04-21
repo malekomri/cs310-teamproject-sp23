@@ -4,6 +4,10 @@ import edu.jsu.mcis.cs310.tas_sp23.Badge;
 import edu.jsu.mcis.cs310.tas_sp23.Shift;
 import java.sql.*;
 
+/**
+* <p>DAO class for handling Shift objects.</p>
+* @author Malek Omri, Drake Johnson
+*/
 public class ShiftDAO { 
     private static final String QUERY_FIND = "SELECT * FROM shift WHERE id = ?";
     private final DAOFactory daoFactory;
@@ -11,6 +15,12 @@ public class ShiftDAO {
     ShiftDAO(DAOFactory daoFactory) {
         this.daoFactory = daoFactory; }
         
+    /**
+    * <p>This method is used to create a Shift object using the constructors by searching for an id in the database.</p>
+    * @author Oakley Pate, Martell Norman
+    * @param id
+    * @return Shift object created using given id
+    */
         public Shift find(int id) {
             Shift shift = null;
             PreparedStatement ps = null;
@@ -59,6 +69,12 @@ public class ShiftDAO {
                 return shift; 
             }
 
+ /**
+    * <p>This method is used to create a Shift object using the constructors by searching for a badge in the database.</p>
+    * @author Malek Omri, Drake Johnson
+    * @param badge
+    * @return Shift object created using given badge
+    */
  public Shift find(Badge badge) {
     Shift shift = null;
     PreparedStatement ps = null;

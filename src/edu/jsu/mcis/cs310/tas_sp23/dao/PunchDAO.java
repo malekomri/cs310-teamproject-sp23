@@ -219,7 +219,7 @@ public class PunchDAO {
     
     /**
     * <p>This method is used to aggregate the Punch objects from one person over a given range of dates.</p>
-    * @author Oakley Pate, Martell Norman
+    * @author Oakley Pate
     * @param badge
     * @param begin
     * @param end
@@ -252,7 +252,7 @@ public class PunchDAO {
     
     /**
     * <p>This method is used to add new Punches to the database.</p>
-    * @author Oakley Pate, Martell Norman
+    * @author Malek Omri
     * @param punch
     * @return id of the new Punch
     */
