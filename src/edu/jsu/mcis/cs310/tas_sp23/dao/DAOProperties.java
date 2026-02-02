@@ -12,13 +12,23 @@ public class DAOProperties {
 
     static {
 
+        InputStream file = null;
+
         try {
 
-            InputStream file = DAOProperties.class.getResourceAsStream(PROPERTIES_FILE);
+            file = DAOProperties.class.getResourceAsStream(PROPERTIES_FILE);
             PROPERTIES.load(file);
 
         } catch (IOException e) {
             throw new DAOException(e.getMessage());
+        } finally {
+            if (file != null) {
+                try {
+                    file.close();
+                } catch (IOException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
         }
 
     }
@@ -34,7 +44,7 @@ public class DAOProperties {
         String fullKey = prefix + "." + key;
         String property = PROPERTIES.getProperty(fullKey);
 
-        if (property == null || property.trim().length() == 0) {
+        if (property != null && property.trim().isEmpty()) {
             property = null;
         }
 
