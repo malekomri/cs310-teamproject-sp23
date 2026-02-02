@@ -33,14 +33,10 @@ public class BadgeDAO {
 
                 rs = ps.executeQuery();
 
-                if (rs != null) {
+                if (rs.next()) {
 
-                    if (rs.next()) {
-
-                        String description = rs.getString("description");
-                        badge = new Badge(id, description);
-
-                    }
+                    String description = rs.getString("description");
+                    badge = new Badge(id, description);
 
                 }
 

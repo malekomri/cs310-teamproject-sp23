@@ -44,8 +44,9 @@ public class DAOProperties {
         String fullKey = prefix + "." + key;
         String property = PROPERTIES.getProperty(fullKey);
 
-        if (property != null && property.trim().isEmpty()) {
-            property = null;
+        // Return null if property is null or contains only whitespace
+        if (property == null || property.trim().isEmpty()) {
+            return null;
         }
 
         return property;
