@@ -9,3 +9,20 @@ manifest.mf
 .Spotlight-V100
 .Trashes
 Thumbs.db
+
+# IDE files
+*.iml
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Compiled files
+*.class
+*.jar
+*.war
+*.ear
+
+# Log files
+*.log
