@@ -31,18 +31,12 @@ public class BadgeDAO {
                 ps = conn.prepareStatement(QUERY_FIND);
                 ps.setString(1, id);
 
-                boolean hasresults = ps.execute();
+                rs = ps.executeQuery();
 
-                if (hasresults) {
+                if (rs.next()) {
 
-                    rs = ps.getResultSet();
-
-                    while (rs.next()) {
-
-                        String description = rs.getString("description");
-                        badge = new Badge(id, description);
-
-                    }
+                    String description = rs.getString("description");
+                    badge = new Badge(id, description);
 
                 }
 

@@ -12,9 +12,8 @@ public class DAOProperties {
 
     static {
 
-        try {
+        try (InputStream file = DAOProperties.class.getResourceAsStream(PROPERTIES_FILE)) {
 
-            InputStream file = DAOProperties.class.getResourceAsStream(PROPERTIES_FILE);
             PROPERTIES.load(file);
 
         } catch (IOException e) {
@@ -34,8 +33,9 @@ public class DAOProperties {
         String fullKey = prefix + "." + key;
         String property = PROPERTIES.getProperty(fullKey);
 
-        if (property == null || property.trim().length() == 0) {
-            property = null;
+        // Return null if property is null or contains only whitespace
+        if (property == null || property.trim().isEmpty()) {
+            return null;
         }
 
         return property;
