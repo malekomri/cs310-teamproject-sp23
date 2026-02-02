@@ -39,7 +39,7 @@ if (rs.next()) { ... }
 
 **Issue:** The `InputStream` resource was never closed, causing a potential resource leak.
 
-**Fix:** Added proper try-finally block to ensure the InputStream is always closed.
+**Fix:** Refactored to use try-with-resources which automatically handles closing and prevents exception masking.
 
 **Before:**
 ```java
@@ -53,20 +53,10 @@ try {
 
 **After:**
 ```java
-InputStream file = null;
-try {
-    file = DAOProperties.class.getResourceAsStream(PROPERTIES_FILE);
+try (InputStream file = DAOProperties.class.getResourceAsStream(PROPERTIES_FILE)) {
     PROPERTIES.load(file);
 } catch (IOException e) {
     throw new DAOException(e.getMessage());
-} finally {
-    if (file != null) {
-        try {
-            file.close();
-        } catch (IOException e) {
-            throw new DAOException(e.getMessage());
-        }
-    }
 }
 ```
 

@@ -12,23 +12,12 @@ public class DAOProperties {
 
     static {
 
-        InputStream file = null;
+        try (InputStream file = DAOProperties.class.getResourceAsStream(PROPERTIES_FILE)) {
 
-        try {
-
-            file = DAOProperties.class.getResourceAsStream(PROPERTIES_FILE);
             PROPERTIES.load(file);
 
         } catch (IOException e) {
             throw new DAOException(e.getMessage());
-        } finally {
-            if (file != null) {
-                try {
-                    file.close();
-                } catch (IOException e) {
-                    throw new DAOException(e.getMessage());
-                }
-            }
         }
 
     }
